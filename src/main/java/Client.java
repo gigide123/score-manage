@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 public class Client {
-    private static final String API_BASE = "http://localhost:8000";
+    private static final String API_BASE = "http://localhost:8070";
     private static final HttpClient client = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

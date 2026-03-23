@@ -3,23 +3,24 @@ package com.example.scoremanage.service;
 import com.example.scoremanage.mapper.StudentMapper;
 import com.example.scoremanage.model.Student;
 import com.example.scoremanage.model.StudentData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class StudentService {
-    // 创建日志对象
-    private static final Logger logger = Logger.getLogger(StudentService.class.getName());
+    // 初始化Logback日志对象，指定当前类为日志来源
+    private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     @Autowired
     private StudentMapper studentMapper;
 
     public int inputStudentAndScore(StudentData data) {
-        // 日志：记录开始录入学生成绩的操作
-        logger.info("开始录入学生成绩，学生编号：" + data.getSid() + "，姓名：" + data.getName());
+        // 记录录入学生成绩的开始日志（INFO级别）
+        logger.info("开始录入学生成绩，学生编号：{}，姓名：{}", data.getSid(), data.getName());
         int allScore = data.getChinese() + data.getMath() + data.getEnglish();
         try {
             int rows = studentMapper.insertStudent(
@@ -31,29 +32,30 @@ public class StudentService {
                     allScore,
                     data.getClass_()
             );
-            // 日志：记录学生成绩录入成功的结果
-            logger.info("学生" + data.getSid() + "录入完成，影响行数：" + rows);
+            // 记录录入成功日志（INFO级别）
+            logger.info("学生{}录入完成，影响行数：{}", data.getSid(), rows);
             return rows;
         } catch (Exception e) {
-            // 日志：记录学生成绩录入失败的异常信息
-            logger.warning("学生" + data.getSid() + "录入失败：" + e.getMessage());
+            // 记录录入失败日志（WARNING级别）
+            logger.warn("学生{}录入失败：{}", data.getSid(), e.getMessage());
+            // 抛出异常，会被Logback捕获为ERROR级别，写入error.log
             throw e;
         }
     }
 
     public List<Student> getAllStudents() {
-        // 日志：记录查询所有学生信息的操作
+        // 记录查询所有学生日志（INFO级别）
         logger.info("查询所有学生信息");
         return studentMapper.getAllStudents();
     }
 
     public Student getOneStudent(String sid) {
-        // 日志：记录查询单个学生信息的操作
-        logger.info("查询学生信息，学生编号：" + sid);
+        // 记录查询单个学生日志（INFO级别）
+        logger.info("查询学生信息，学生编号：{}", sid);
         Student student = studentMapper.getStudentBySid(sid);
         if (student == null) {
-            // 日志：记录学生不存在的警告信息
-            logger.warning("学生编号" + sid + "不存在");
+            // 记录学生不存在日志（WARNING级别）
+            logger.warn("学生编号{}不存在", sid);
         }
         return student;
     }

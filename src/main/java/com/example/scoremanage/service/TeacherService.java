@@ -3,22 +3,24 @@ package com.example.scoremanage.service;
 import com.example.scoremanage.mapper.TeacherMapper;
 import com.example.scoremanage.model.Teacher;
 import com.example.scoremanage.model.TeacherData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class TeacherService {
-    // 创建日志对象
-    private static final Logger logger = Logger.getLogger(TeacherService.class.getName());
+    // 初始化Logback日志对象，指定当前类为日志来源
+    private static final Logger logger = LoggerFactory.getLogger(TeacherService.class);
 
     @Autowired
     private TeacherMapper teacherMapper;
 
     public int inputOneTeacher(TeacherData data) {
-        // 日志：记录开始录入教师信息的操作
-        logger.info("开始录入教师信息，教师编号：" + data.getTid() + "，姓名：" + data.getName());
+        // 记录录入教师信息的开始日志（INFO级别）
+        logger.info("开始录入教师信息，教师编号：{}，姓名：{}", data.getTid(), data.getName());
         try {
             int rows = teacherMapper.insertTeacher(
                     data.getTid(),
@@ -26,29 +28,30 @@ public class TeacherService {
                     data.getSubject(),
                     data.getClass_()
             );
-            // 日志：记录教师信息录入成功的结果
-            logger.info("教师" + data.getTid() + "录入完成，影响行数：" + rows);
+            // 记录录入成功日志（INFO级别）
+            logger.info("教师{}录入完成，影响行数：{}", data.getTid(), rows);
             return rows;
         } catch (Exception e) {
-            // 日志：记录教师信息录入失败的异常信息
-            logger.warning("教师" + data.getTid() + "录入失败：" + e.getMessage());
+            // 记录录入失败日志（WARNING级别）
+            logger.warn("教师{}录入失败：{}", data.getTid(), e.getMessage());
+            // 抛出异常，会被Logback捕获为ERROR级别，写入error.log
             throw e;
         }
     }
 
     public List<Teacher> getAllTeachers() {
-        // 日志：记录查询所有教师信息的操作
+        // 记录查询所有教师日志（INFO级别）
         logger.info("查询所有教师信息");
         return teacherMapper.getAllTeachers();
     }
 
     public Teacher getOneTeacher(String tid) {
-        // 日志：记录查询单个教师信息的操作
-        logger.info("查询教师信息，教师编号：" + tid);
+        // 记录查询单个教师日志（INFO级别）
+        logger.info("查询教师信息，教师编号：{}", tid);
         Teacher teacher = teacherMapper.getTeacherByTid(tid);
         if (teacher == null) {
-            // 日志：记录教师不存在的警告信息
-            logger.warning("教师编号" + tid + "不存在");
+            // 记录教师不存在日志（WARNING级别）
+            logger.warn("教师编号{}不存在", tid);
         }
         return teacher;
     }
