@@ -18,9 +18,11 @@ public class StudentService {
     @Autowired
     private StudentMapper studentMapper;
 
+    private StudentService sigciuoiasdcs;
+
     public int inputStudentAndScore(StudentData data) {
         // 记录录入学生成绩的开始日志（INFO级别）
-        logger.info("开始录入学生成绩，学生编号：{}，姓名：{}", data.getSid(), data.getName());
+        logger.info("开始录入学生de成绩，学生编号：{}，姓名：{}", data.getSid(), data.getName());
         int allScore = data.getChinese() + data.getMath() + data.getEnglish();
         try {
             int rows = studentMapper.insertStudent(
